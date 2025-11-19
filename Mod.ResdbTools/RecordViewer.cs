@@ -1,9 +1,7 @@
 using System;
-using System.Reflection;
 using System.Threading.Tasks;
 using Elements.Core;
 using FrooxEngine;
-using FrooxEngine.UIX;
 using SkyFrost.Base;
 using FE = FrooxEngine;
 using UIX = FrooxEngine.UIX;
@@ -121,19 +119,12 @@ internal sealed class RecordViewer(FE.Slot root)
         if (record is null) return;
         var profile = slot.Engine.PlatformProfile;
 
-        var assets = SkyFrost.Base.SkyFrostConfig.SKYFROST_PRODUCTION.AssetInterface;
-        if (assets.Cloud is null)
-        {
-            // For some reason, Resonite doesn't initialize its own asset interface?
-            assets.Initialize(Engine.Current.Cloud);
-        }
-
         string result = action switch
         {
             RecordCopyUrlAction.Record => record.GetUrl(profile).ToString(),
             RecordCopyUrlAction.Asset => record.AssetURI,
             RecordCopyUrlAction.Web => record.GetWebUrl(profile).ToString(),
-            RecordCopyUrlAction.WebAsset => assets.DBToHttp(new Uri(record.AssetURI), DB_Endpoint.Default).ToString(),
+            RecordCopyUrlAction.WebAsset => slot.Engine.Cloud.Assets.DBToHttp(new Uri(record.AssetURI), DB_Endpoint.Default).ToString(),
             _ => throw new InvalidOperationException(),
         };
         slot.Engine.InputInterface.Clipboard?.SetText(result);
@@ -238,13 +229,11 @@ internal sealed class RecordViewer(FE.Slot root)
         button.LocalPressed += (button, data) =>
         {
             FE.Grabber grabber = button.Slot.World.GetLocalUserGrabberWithItems(data.source.Slot);
-            ResdbTools.Logger.Info(() => $"Grabber: {grabber.LocalExternallyHeldItem}");
             if (grabber is null) return;
             var held = grabber.LocalExternallyHeldItem ?? grabber.HolderSlot;
             if (held is null) return;
             foreach (var refProxy in held.GetComponentsInChildren<FE.ReferenceProxy>())
             {
-                ResdbTools.Logger.Info(() => $"Proxy: {refProxy.Reference.Target?.GetType()}");
                 if (refProxy.Reference.Target is FE.StaticTexture2D tex)
                 {
                     staticTexture.URL.Value = tex.URL.Value;

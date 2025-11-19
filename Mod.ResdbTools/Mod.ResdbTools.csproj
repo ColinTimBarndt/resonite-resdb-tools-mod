@@ -10,16 +10,15 @@
     <PackageId>Mod.ResdbTools</PackageId>
     <Title>Resdb Tools for MonkeyLoader</Title>
     <Authors>Colin The Cat</Authors>
-    <Version>0.1.0</Version>
+    <Version>0.1.1</Version>
     <Description>This mod extends the inventory browser with tools to get and modify Resonite database records.</Description>
-    <PackageLicenseExpression>PROPRIETARY</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/ResoniteModdingGroup/MonkeyLoader.ModTemplate</PackageProjectUrl>
+    <PackageLicenseExpression>UNLICENSED</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/ColinTimBarndt/resonite-resdb-tools</PackageProjectUrl>
     <PackageTags>mod; mods; monkeyloader; resonite; resdb</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
     <None Include="../README.md" Pack="true" PackagePath="" />
-    <None Include="../Monkeyfest.json" Pack="true" PackagePath="" />
     <None Include="../Locale/*" Pack="true" PackagePath="content/Locale/" />
   </ItemGroup>
 

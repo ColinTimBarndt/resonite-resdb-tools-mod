@@ -1,9 +1,9 @@
 {
   "localeCode": "en",
-  "authors": [ "Colin The Cat" ],
+  "authors": ["Colin The Cat"],
   "messages": {
     "Mod.ResdbTools.InventoryBrowserPatch.Name": "Inventory Browser Patch",
-    "Mod.ResdbTools.InventoryBrowserPatch.Description": "Adds Inventory Browser UI for Resdb tools.",
+    "Mod.ResdbTools.InventoryBrowserPatch.Description": "Adds UI to the Inventory Browser for Resdb tools.",
     "Mod.ResdbTools.Inventory.ShowRecord": "Show Record",
     "Mod.ResdbTools.RecordEditor.Title.Object": "Item Record",
     "Mod.ResdbTools.RecordEditor.Title.Directory": "Folder Record",
@@ -14,9 +14,9 @@
     "Mod.ResdbTools.RecordEditor.Asset": "Replace Asset",
     "Mod.ResdbTools.RecordEditor.Loading": "Loading...",
     "Mod.ResdbTools.RecordEditor.Error": "Error: {message}",
-    "Mod.ResdbTools.RecordEditor.CopyRecordUrl": "Copy Record Url",
-    "Mod.ResdbTools.RecordEditor.CopyAssetUrl": "Copy Asset Url",
-    "Mod.ResdbTools.RecordEditor.CopyWebUrl": "Copy Web Url",
-    "Mod.ResdbTools.RecordEditor.CopyWebAssetUrl": "Copy Asset Url (Web)"
+    "Mod.ResdbTools.RecordEditor.CopyRecordUrl": "Copy Record URL",
+    "Mod.ResdbTools.RecordEditor.CopyAssetUrl": "Copy Asset URL",
+    "Mod.ResdbTools.RecordEditor.CopyWebUrl": "Copy Web URL",
+    "Mod.ResdbTools.RecordEditor.CopyWebAssetUrl": "Copy Asset URL (Web)"
   }
 }

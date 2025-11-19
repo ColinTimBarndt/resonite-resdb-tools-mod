@@ -1,0 +1,22 @@
+{
+  "localeCode": "de",
+  "authors": ["Colin The Cat"],
+  "messages": {
+    "Mod.ResdbTools.InventoryBrowserPatch.Name": "Inventar-Browser Patch",
+    "Mod.ResdbTools.InventoryBrowserPatch.Description": "Fügt UI im Inventar-Browser für Resdb-Werkzeuge hinzu.",
+    "Mod.ResdbTools.Inventory.ShowRecord": "Eintrag Anzeigen",
+    "Mod.ResdbTools.RecordEditor.Title.Object": "Gegenstand Eintrag",
+    "Mod.ResdbTools.RecordEditor.Title.Directory": "Ordner Eintrag",
+    "Mod.ResdbTools.RecordEditor.Title.Link": "Link Eintrag",
+    "Mod.ResdbTools.RecordEditor.Title.World": "Welt Eintrag",
+    "Mod.ResdbTools.RecordEditor.Name": "Name",
+    "Mod.ResdbTools.RecordEditor.Thumbnail": "Icon",
+    "Mod.ResdbTools.RecordEditor.Asset": "Asset ersetzen",
+    "Mod.ResdbTools.RecordEditor.Loading": "Lade...",
+    "Mod.ResdbTools.RecordEditor.Error": "Fehler: {message}",
+    "Mod.ResdbTools.RecordEditor.CopyRecordUrl": "Eintrag-URL Kopieren",
+    "Mod.ResdbTools.RecordEditor.CopyAssetUrl": "Asset-URL Kopieren",
+    "Mod.ResdbTools.RecordEditor.CopyWebUrl": "Web-URL Kopieren",
+    "Mod.ResdbTools.RecordEditor.CopyWebAssetUrl": "Asset-URL Kopieren (Web)"
+  }
+}
