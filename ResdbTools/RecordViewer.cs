@@ -1,28 +1,27 @@
-using System;
-using System.Threading.Tasks;
 using Elements.Core;
 using FrooxEngine;
+using FrooxEngine.UIX;
 using SkyFrost.Base;
-using FE = FrooxEngine;
-using UIX = FrooxEngine.UIX;
+using Record = FrooxEngine.Store.Record;
 
-namespace Mod.ResdbTools;
+namespace ResdbTools;
 
-internal sealed class RecordViewer(FE.Slot root)
+internal sealed class RecordViewer(Slot root, RecordDirectory? directory)
 {
-    private readonly FE.Slot slot = root;
-    private FE.Store.Record? record = null;
-    private UIX.TextField? nameField = null;
-    private FE.Sync<Uri>? thumbnail = null;
-    private UIX.TextField? newAsset = null;
-    public event Action<FE.Store.Record>? Saved;
+    private readonly Slot _slot = root;
+    private readonly RecordDirectory? _directory = directory;
+    private Record? _record = null;
+    private TextField? _nameField = null;
+    private Sync<Uri>? _thumbnail = null;
+    private TextField? _newAsset = null;
+    public event Action<Record>? Saved;
 
     public async Task FetchRecord(Uri url)
     {
-        slot.World.RunSynchronously(() => BuildLoadingUI());
-        var result = await slot.Engine.RecordManager.FetchRecord(url);
+        _slot.World.RunSynchronously(() => BuildLoadingUI());
+        var result = await _slot.Engine.RecordManager.FetchRecord(url);
 
-        slot.World.RunSynchronously(() =>
+        _slot.World.RunSynchronously(() =>
         {
             if (!result.IsOK)
             {
@@ -30,16 +29,16 @@ internal sealed class RecordViewer(FE.Slot root)
                 return;
             }
 
-            record = result.Entity;
+            _record = result.Entity;
             BuildEditorUI();
         });
     }
 
-    private UIX.UIBuilder BeginBuildUI()
+    private UIBuilder BeginBuildUI()
     {
-        slot.DestroyChildren();
-        UIX.UIBuilder ui = new(slot);
-        FE.RadiantUI_Constants.SetupBaseStyle(ui);
+        _slot.DestroyChildren();
+        UIBuilder ui = new(_slot);
+        RadiantUI_Constants.SetupBaseStyle(ui);
         ui.VerticalLayout(8f, forceExpandHeight: false);
         ui.Style.MinHeight = 32f;
         ui.Style.PreferredHeight = 32f;
@@ -56,43 +55,42 @@ internal sealed class RecordViewer(FE.Slot root)
     {
         var ui = BeginBuildUI();
         var text = ui.Text(ModLocaleKeys.RecordEditorError(error));
-        text.Color.Value = FE.RadiantUI_Constants.Hero.RED;
+        text.Color.Value = RadiantUI_Constants.Hero.RED;
     }
 
     private void BuildEditorUI()
     {
         var ui = BeginBuildUI();
-        if (record is null) return;
+        if (_record is null) return;
 
-        nameField = BuildLabeledTextField(ui, ModLocaleKeys.RecordEditorName, record.Name);
-        if (record.RecordType == RecordTypes.OBJECT)
+        _nameField = BuildLabeledTextField(ui, ModLocaleKeys.RecordEditorName, _record.Name);
+        if (_record.RecordType == RecordTypes.OBJECT)
         {
             Uri? thumbnailUri = null;
-            if (!String.IsNullOrEmpty(record.ThumbnailURI))
+            if (!String.IsNullOrEmpty(_record.ThumbnailURI))
             {
-                Uri.TryCreate(record.ThumbnailURI, UriKind.Absolute, out thumbnailUri);
+                Uri.TryCreate(_record.ThumbnailURI, UriKind.Absolute, out thumbnailUri);
             }
-            thumbnail = BuildLabeledTextureField(ui, ModLocaleKeys.RecordEditorThumbnail, thumbnailUri);
+            _thumbnail = BuildLabeledTextureField(ui, ModLocaleKeys.RecordEditorThumbnail, thumbnailUri);
 
-            newAsset = BuildLabeledTextField(ui, ModLocaleKeys.RecordEditorAsset, "");
-            newAsset.Text.Content.OnValueChange += value =>
+            _newAsset = BuildLabeledTextField(ui, ModLocaleKeys.RecordEditorAsset, "");
+            _newAsset.Text.Content.OnValueChange += value =>
             {
                 var valid = Uri.TryCreate(value, UriKind.Absolute, out var uri) && uri is not null;
-                ResdbTools.Logger.Info(() => $"Changed: {uri}");
-                newAsset.Text.Color.Value = valid ? FE.RadiantUI_Constants.Hero.GREEN : FE.RadiantUI_Constants.Hero.RED;
+                _newAsset.Text.Color.Value = valid ? RadiantUI_Constants.Hero.GREEN : RadiantUI_Constants.Hero.RED;
             };
         }
 
         // Copy URL buttons
         ui.Spacer(16f);
-        foreach (var action in AvailableCopyActions(record))
+        foreach (var action in AvailableCopyActions(_record))
         {
             var copyRecordUrlButton = ui.Button(ModLocaleKeys.RecordEditorCopyUrl(action));
             copyRecordUrlButton.LocalPressed += (button, data) => CopyUrl(action);
         }
 
         {
-            var layout = ui.Empty("Spacer").AttachComponent<UIX.LayoutElement>();
+            var layout = ui.Empty("Spacer").AttachComponent<LayoutElement>();
             layout.FlexibleHeight.Value = 1f;
             layout.MinHeight.Value = 0f;
             layout.PreferredHeight.Value = 0f;
@@ -102,7 +100,7 @@ internal sealed class RecordViewer(FE.Slot root)
         ui.HorizontalLayout(6f);
 
         ui.PushStyle();
-        ui.Style.ButtonColor = FE.RadiantUI_Constants.MidLight.GREEN;
+        ui.Style.ButtonColor = RadiantUI_Constants.MidLight.GREEN;
         var saveButton = ui.Button(ModLocaleKeys.Save);
         saveButton.LocalPressed += (button, data) => button.World.Coroutines.StartTask(async delegate
         {
@@ -116,21 +114,21 @@ internal sealed class RecordViewer(FE.Slot root)
 
     private void CopyUrl(RecordCopyUrlAction action)
     {
-        if (record is null) return;
-        var profile = slot.Engine.PlatformProfile;
+        if (_record is null) return;
+        var profile = _slot.Engine.PlatformProfile;
 
         string result = action switch
         {
-            RecordCopyUrlAction.Record => record.GetUrl(profile).ToString(),
-            RecordCopyUrlAction.Asset => record.AssetURI,
-            RecordCopyUrlAction.Web => record.GetWebUrl(profile).ToString(),
-            RecordCopyUrlAction.WebAsset => slot.Engine.Cloud.Assets.DBToHttp(new Uri(record.AssetURI), DB_Endpoint.Default).ToString(),
+            RecordCopyUrlAction.Record => _record.GetUrl(profile).ToString(),
+            RecordCopyUrlAction.Asset => _record.AssetURI,
+            RecordCopyUrlAction.Web => _record.GetWebUrl(profile).ToString(),
+            RecordCopyUrlAction.WebAsset => _slot.Engine.Cloud.Assets.DBToHttp(new Uri(_record.AssetURI), DB_Endpoint.Default).ToString(),
             _ => throw new InvalidOperationException(),
         };
-        slot.Engine.InputInterface.Clipboard?.SetText(result);
+        _slot.Engine.InputInterface.Clipboard?.SetText(result);
     }
 
-    private static RecordCopyUrlAction[] AvailableCopyActions(FE.Store.Record record)
+    private static RecordCopyUrlAction[] AvailableCopyActions(Record record)
     {
         return record.RecordType switch
         {
@@ -147,67 +145,67 @@ internal sealed class RecordViewer(FE.Slot root)
 
     private async Task Save()
     {
-        if (record is null) return;
+        if (_record is null) return;
 
         // Modify record
-        if (nameField is not null) record.Name = nameField.Text.Content.Value;
-        if (thumbnail?.Value is not null) record.ThumbnailURI = thumbnail.Value.ToString();
+        if (_nameField is not null) _record.Name = _nameField.Text.Content.Value;
+        if (_thumbnail?.Value is not null) _record.ThumbnailURI = _thumbnail.Value.ToString();
 
-        if (newAsset is not null && Uri.TryCreate(newAsset.Text.Content.Value, UriKind.Absolute, out var uri) && uri is not null)
+        if (_newAsset is not null && Uri.TryCreate(_newAsset.Text.Content.Value, UriKind.Absolute, out var uri) && uri is not null)
         {
-            record.AssetURI = uri.ToString();
+            _record.AssetURI = uri.ToString();
         }
 
         // Remove path characters.
         // Path characters, while technically possible, will result in the inventory freaking out.
-        if (record.RecordType == RecordTypes.DIRECTORY && record.Name.Contains('/'))
+        if (_record.RecordType == RecordTypes.DIRECTORY && _record.Name.Contains('/'))
         {
-            record.Name = record.Name.Replace('/', ' ');
+            _record.Name = _record.Name.Replace('/', ' ');
         }
 
         // Save record
-        slot.World.RunSynchronously(() => BuildLoadingUI());
-        var result = await slot.Engine.RecordManager.SaveRecord(record).ConfigureAwait(continueOnCapturedContext: false);
+        _slot.World.RunSynchronously(() => BuildLoadingUI());
+        var result = await _slot.Engine.RecordManager.SaveRecord(_record).ConfigureAwait(continueOnCapturedContext: false);
         if (result.saved)
         {
-            Saved?.Invoke(record);
-            slot.World.RunSynchronously(() => Close());
+            Saved?.Invoke(_record);
+            _slot.World.RunSynchronously(() => Close());
         }
         else
         {
-            slot.World.RunSynchronously(() => BuildErrorUI("Failed"));
+            _slot.World.RunSynchronously(() => BuildErrorUI("Failed"));
         }
     }
 
     private void Close()
     {
-        var container = slot.GetComponentInParents<FE.IUIContainer>();
+        var container = _slot.GetComponentInParents<IUIContainer>();
         if (container is not null)
         {
             container.CloseContainer();
         }
         else
         {
-            FE.ObjectRootExtensions.GetObjectRoot(slot).Destroy();
+            ObjectRootExtensions.GetObjectRoot(_slot).Destroy();
         }
     }
 
-    private static void BeginBuildLabeledField(UIX.UIBuilder ui, LocaleString label)
+    private static void BeginBuildLabeledField(UIBuilder ui, LocaleString label)
     {
         ui.HorizontalLayout(8f);
         ui.Text(label, bestFit: true, alignment: Alignment.MiddleLeft, parseRTF: false);
     }
 
-    private static UIX.TextField BuildLabeledTextField(UIX.UIBuilder ui, LocaleString label, string value)
+    private static TextField BuildLabeledTextField(UIBuilder ui, LocaleString label, string value)
     {
         BeginBuildLabeledField(ui, label);
         var textField = ui.TextField(value, parseRTF: false);
-        textField.Slot.GetComponentOrAttach<UIX.LayoutElement>().MinWidth.Value = 375f;
+        textField.Slot.GetComponentOrAttach<LayoutElement>().MinWidth.Value = 375f;
         ui.NestOut();
         return textField;
     }
 
-    private static FE.Sync<Uri> BuildLabeledTextureField(UIX.UIBuilder ui, LocaleString label, Uri? texture)
+    private static Sync<Uri> BuildLabeledTextureField(UIBuilder ui, LocaleString label, Uri? texture)
     {
         ui.PushStyle();
         ui.Style.MinHeight = 96f;
@@ -215,11 +213,11 @@ internal sealed class RecordViewer(FE.Slot root)
         ui.HorizontalLayout(0f, 0f, Alignment.MiddleCenter);
         ui.PopStyle();
         var panel = ui.Panel();
-        var panelLayout = panel.Slot.GetComponentOrAttach<UIX.LayoutElement>();
+        var panelLayout = panel.Slot.GetComponentOrAttach<LayoutElement>();
         panelLayout.MinWidth.Value = 80f;
         panelLayout.MinHeight.Value = 80f;
-        var button = panel.Slot.AttachComponent<UIX.Button>();
-        var staticTexture = panel.Slot.AttachComponent<FE.StaticTexture2D>();
+        var button = panel.Slot.AttachComponent<Button>();
+        var staticTexture = panel.Slot.AttachComponent<StaticTexture2D>();
         var image = ui.RawImage(staticTexture, preserveAspect: true);
         image.InteractionTarget.Value = false;
         if (texture is not null) staticTexture.URL.Value = texture;
@@ -228,13 +226,13 @@ internal sealed class RecordViewer(FE.Slot root)
         ui.NestOut();
         button.LocalPressed += (button, data) =>
         {
-            FE.Grabber grabber = button.Slot.World.GetLocalUserGrabberWithItems(data.source.Slot);
+            Grabber grabber = button.Slot.World.GetLocalUserGrabberWithItems(data.source.Slot);
             if (grabber is null) return;
             var held = grabber.LocalExternallyHeldItem ?? grabber.HolderSlot;
             if (held is null) return;
-            foreach (var refProxy in held.GetComponentsInChildren<FE.ReferenceProxy>())
+            foreach (var refProxy in held.GetComponentsInChildren<ReferenceProxy>())
             {
-                if (refProxy.Reference.Target is FE.StaticTexture2D tex)
+                if (refProxy.Reference.Target is StaticTexture2D tex)
                 {
                     staticTexture.URL.Value = tex.URL.Value;
                     return;
