@@ -1,10 +1,9 @@
 name: build attested
 
 on:
-  push:
-    tags:
-      - v*
   workflow_dispatch: {}
+  release:
+    types: [unpublished]
 
 jobs:
   build-attested:

@@ -1,9 +1,7 @@
 name: build
 
 on:
-  push:
-    tags-ignore:
-      - v*
+  push: {}
   pull_request:
     paths:
       - "**.cs"
