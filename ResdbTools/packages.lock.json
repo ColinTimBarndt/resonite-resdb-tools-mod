@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "dependencies": {
+    "net10.0": {
+      "DotNet.ReproducibleBuilds": {
+        "type": "Direct",
+        "requested": "[2.0.1, )",
+        "resolved": "2.0.1",
+        "contentHash": "8rbExxnDIsdpJ16tmX7jwXZYA864OXQhAvQRPX+LLaxDPI1eCTWg6AZP85dJrOLv1Ib9fp0KGKY+zHgnSBSamQ=="
+      },
+      "Lib.Harmony": {
+        "type": "Direct",
+        "requested": "[2.4.0, )",
+        "resolved": "2.4.0",
+        "contentHash": "8ldIV0g1plLelrD+BPFURQ2Q9rp4FLI5BV7MRvPFn2OT56qxrXFnqMBDMYNsn1uONdEY1YLB/2XPH2/iaKQqLQ=="
+      },
+      "MicroUtils.HarmonyAnalyzers": {
+        "type": "Direct",
+        "requested": "[1.6.1, )",
+        "resolved": "1.6.1",
+        "contentHash": "vKntV0FFqTtXPGH18XXFApFwFrR4qf24Xz9NSO+e3DiPKeB0Pr/b3CtIeFB8Pj5RGtoOY9+j7DEa72SQi6bNYg=="
+      },
+      "MonkeyLoader.GamePacks.ResoniteModLoader": {
+        "type": "Direct",
+        "requested": "[4.2.0.1, )",
+        "resolved": "4.2.0.1",
+        "contentHash": "W7hsqjQRYYcZkhtvuVMhHSGCAaRjmuzSnSZKIyEj1rQ9kgVf/Dm4minrrT6lojbrtw12mUv2DZP4CkTzNk0UKA=="
+      }
+    }
+  }
+}

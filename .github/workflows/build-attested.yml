@@ -1,0 +1,41 @@
+name: build attested
+
+on:
+  push:
+    tags:
+      - v*
+  workflow_dispatch: {}
+
+jobs:
+  build-attested:
+    name: build-ubuntu
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+      attestations: write
+
+    steps:
+      - uses: actions/checkout@v6
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v5
+        with:
+          global-json-file: global.json
+
+      - name: Install dependencies
+        run: dotnet restore --locked-mode
+
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: ResdbTools
+          path: "ResdbTools/bin/Release/**/*"
+          if-no-files-found: error
+
+      - name: Attest
+        uses: actions/attest-build-provenance@v3
+        with:
+          subject-path: "ResdbTools/bin/Release/**/*.dll"

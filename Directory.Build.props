@@ -1,18 +1,16 @@
 <Project>
 	<PropertyGroup>
-		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-		<TargetFramework>net10.0</TargetFramework>
-		<LangVersion>14.0</LangVersion>
-		<Nullable>enable</Nullable>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<!-- Change CopyToMods to true if you'd like builds to be moved into the Mods folder automatically-->
-		<CopyToMods Condition="'$(CopyToMods)'==''">true</CopyToMods>
+		<ResoniteTargetModLoader>ResoniteModLoader</ResoniteTargetModLoader>
+		<ResoniteUseMonkeyLoaderCore>false</ResoniteUseMonkeyLoaderCore>
+		<ResoniteUsePublicizedAssemblies>false</ResoniteUsePublicizedAssemblies>
+		<ResoniteInstallOnBuild Condition="'$(ResoniteInstallOnBuild)'==''">true</ResoniteInstallOnBuild>
+		<ResoniteForceReferenceAssemblies>true</ResoniteForceReferenceAssemblies>
+
+		<RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+		<DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(ResonitePath)'==''">
-		<!-- If you don't want to provide a ResonitePath in dotnet build, you can specify one here -->
-		<ResonitePath>$(MSBuildThisFileDirectory)Resonite/</ResonitePath>
-		<ResonitePath Condition="Exists('C:\Program Files (x86)\Steam\steamapps\common\Resonite\')">C:\Program Files (x86)\Steam\steamapps\common\Resonite\</ResonitePath>
-		<ResonitePath Condition="Exists('$(HOME)/.steam/steam/steamapps/common/Resonite/')">$(HOME)/.steam/steam/steamapps/common/Resonite/</ResonitePath>
-	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="DotNet.ReproducibleBuilds" Version="2.0.1" PrivateAssets="All" />
+	</ItemGroup>
 </Project>

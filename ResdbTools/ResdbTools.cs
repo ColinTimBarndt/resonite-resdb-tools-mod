@@ -9,7 +9,8 @@ public sealed class ResdbTools : ResoniteMod
     internal const string VERSION_CONSTANT = "1.0.0";
     public override string Name => "ResdbTools";
     public override string Author => "Colin Tim Barndt";
-    public override string Version => VERSION_CONSTANT;
+    public override string Version { get; } =
+		System.Reflection.Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "0.0.0";
     public override string Link => "https://github.com/ColinTimBarndt/resonite-resdb-tools-mod";
 
     internal static ModConfiguration? Config;

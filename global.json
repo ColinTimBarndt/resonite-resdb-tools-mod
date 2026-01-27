@@ -1,0 +1,9 @@
+{
+  "sdk": {
+    "version": "10.0.100",
+    "rollForward": "latestPatch"
+  },
+  "msbuild-sdks": {
+    "Remora.Resonite.Sdk": "2.0.10"
+  }
+}
