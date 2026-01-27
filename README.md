@@ -1,3 +1,5 @@
+![build workflow status](https://github.com/ColinTimBarndt/resonite-resdb-tools-mod/actions/workflows/build.yml/badge.svg?branch=main)
+
 # Resdb Tools
 
 A [ResoniteModLoader](https://github.com/resonite-modding-group/ResoniteModLoader) mod for [Resonite](https://resonite.com/) that extends the inventory browser with tools to get and modify Resonite database records.
