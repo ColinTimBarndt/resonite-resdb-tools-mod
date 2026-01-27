@@ -2,8 +2,6 @@ name: build attested
 
 on:
   workflow_dispatch: {}
-  release:
-    types: [unpublished]
 
 jobs:
   build-attested:
